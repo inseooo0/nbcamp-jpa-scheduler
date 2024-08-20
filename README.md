@@ -402,3 +402,35 @@
       "message": "Invalid parameter included"
     }
     ```
+
+## ERD
+![image](https://github.com/user-attachments/assets/98f314a9-ba97-456f-a48c-6b37b8026951)
+
+### schedule table
+|column name|type|description|기본값|null 허용|
+|---|---|---|---|---|
+|id|BIGINT|일정 ID (PK)|auto_increment|X|
+|title|VARCHAR(200)|일정 제목|X|X|
+|content|VARCHAR(200)|일정 내용|X|X|
+|user_id|BIGINT|작성 유저 ID (FK)|X|X|
+|create_at|DATETIME|일정 등록일|CURRENT_TIMESTAMP|X|
+|update_at|DATETIME|일정 수정일|CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP|X|
+
+### user table
+|column name|type|description|기본값|null 허용|
+|---|---|---|---|---|
+|id|BIGINT|유저 ID (PK)|auto_increment|X|
+|name|VARCHAR(200)|유저 이름|X|X|
+|email|VARCHAR(200)|유저 email|X|X|
+|create_at|DATETIME|유저 정보 등록일|CURRENT_TIMESTAMP|X|
+|update_at|DATETIME|유저 정보 수정일|CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP|X|
+
+### comment table
+|column name|type|description|기본값|null 허용|
+|---|---|---|---|---|
+|id|BIGINT|댓글 ID (PK)|auto_increment|X|
+|schedule_id|BIGINT|일정 ID (FK)|X|X|
+|user_id|BIGINT|작성 유저 ID (FK)|X|X|
+|content|VARCHAR(200)|댓글 내용|X|X|
+|create_at|DATETIME|댓글 등록일|CURRENT_TIMESTAMP|X|
+|update_at|DATETIME|댓글 수정일|CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP|X|
