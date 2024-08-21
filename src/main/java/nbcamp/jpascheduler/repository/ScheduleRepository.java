@@ -18,4 +18,5 @@ public class ScheduleRepository {
     public Schedule findById(Long id) {
         return em.find(Schedule.class, id);
     }
+
 }
