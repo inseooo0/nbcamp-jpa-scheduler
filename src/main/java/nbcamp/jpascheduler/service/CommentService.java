@@ -9,6 +9,8 @@ import nbcamp.jpascheduler.repository.CommentRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -25,5 +27,13 @@ public class CommentService {
         comment.setSchedule(schedule);
         comment.setContent(dto.getContent());
         return repository.save(comment);
+    }
+
+    public Comment findById(Long id) {
+        return repository.findById(id);
+    }
+
+    public List<Comment> findAll() {
+        return repository.findAll();
     }
 }
