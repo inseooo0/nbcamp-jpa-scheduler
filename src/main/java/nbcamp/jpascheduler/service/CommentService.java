@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import nbcamp.jpascheduler.domain.Comment;
 import nbcamp.jpascheduler.domain.Schedule;
 import nbcamp.jpascheduler.dto.CommentCreateDto;
+import nbcamp.jpascheduler.dto.CommentUpdateDto;
 import nbcamp.jpascheduler.dto.ScheduleCreateDto;
 import nbcamp.jpascheduler.repository.CommentRepository;
 import org.springframework.stereotype.Service;
@@ -35,5 +36,15 @@ public class CommentService {
 
     public List<Comment> findAll() {
         return repository.findAll();
+    }
+
+    @Transactional
+    public Comment update(Long id, CommentUpdateDto dto) {
+        Comment comment = repository.findById(id);
+        Schedule schedule = scheduleService.findById(dto.getScheduleId());
+        comment.setSchedule(schedule);
+        comment.setName(dto.getName());
+        comment.setContent(dto.getContent());
+        return comment;
     }
 }

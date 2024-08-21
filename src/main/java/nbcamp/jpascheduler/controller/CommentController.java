@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import nbcamp.jpascheduler.domain.Comment;
 import nbcamp.jpascheduler.dto.CommentCreateDto;
 import nbcamp.jpascheduler.dto.CommentResponseDto;
+import nbcamp.jpascheduler.dto.CommentUpdateDto;
 import nbcamp.jpascheduler.service.CommentService;
 import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.*;
@@ -39,6 +40,12 @@ public class CommentController {
             dtoList.add(modelMapper.map(comment, CommentResponseDto.class));
         }
         return dtoList;
+    }
+
+    @PutMapping("/{commentId}")
+    public CommentResponseDto updateComment(@PathVariable Long commentId, @RequestBody CommentUpdateDto requestDto) {
+        Comment updated = commentService.update(commentId, requestDto);
+        return modelMapper.map(updated, CommentResponseDto.class);
     }
 
 }
