@@ -47,4 +47,9 @@ public class CommentService {
         comment.setContent(dto.getContent());
         return comment;
     }
+
+    @Transactional
+    public void removeById(Long id) {
+        repository.removeById(id);
+    }
 }

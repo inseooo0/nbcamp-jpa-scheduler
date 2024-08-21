@@ -48,4 +48,9 @@ public class CommentController {
         return modelMapper.map(updated, CommentResponseDto.class);
     }
 
+    @DeleteMapping("/{commentId}")
+    public String deleteComment(@PathVariable Long commentId) {
+        commentService.removeById(commentId);
+        return "ok";
+    }
 }

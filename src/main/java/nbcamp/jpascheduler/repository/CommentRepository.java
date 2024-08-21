@@ -27,4 +27,9 @@ public class CommentRepository {
         return em.createQuery("select c from Comment c", Comment.class)
                 .getResultList();
     }
+
+    public void removeById(Long id) {
+        Comment comment = findById(id);
+        em.remove(comment);
+    }
 }
