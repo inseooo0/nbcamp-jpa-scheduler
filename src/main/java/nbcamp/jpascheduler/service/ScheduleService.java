@@ -43,4 +43,9 @@ public class ScheduleService {
         schedule.setContent(dto.getContent());
         return schedule;
     }
+
+    @Transactional
+    public void removeById(Long id) {
+        repository.removeById(id);
+    }
 }

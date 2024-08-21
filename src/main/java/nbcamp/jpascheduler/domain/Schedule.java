@@ -7,6 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter @Setter
@@ -17,6 +18,9 @@ public class Schedule {
     private String name;
     private String title;
     private String content;
+
+    @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL)
+    private List<Comment> comments;
 
     @CreationTimestamp // INSERT 시 자동으로 값을 채워줌
     @Column(name = "create_at")

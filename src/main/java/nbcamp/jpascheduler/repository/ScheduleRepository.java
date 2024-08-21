@@ -27,4 +27,9 @@ public class ScheduleRepository {
                 .setMaxResults(limit)
                 .getResultList();
     }
+
+    public void removeById(Long id) {
+        Schedule schedule = em.find(Schedule.class, id);
+        em.remove(schedule);
+    }
 }

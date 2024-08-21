@@ -49,4 +49,10 @@ public class ScheduleController {
         Schedule updated = scheduleService.update(scheduleId, requestDto);
         return modelMapper.map(updated, ScheduleResponseDto.class);
     }
+
+    @DeleteMapping("/{scheduleId}")
+    public String removeSchedule(@PathVariable Long scheduleId) {
+        scheduleService.removeById(scheduleId);
+        return "ok";
+    }
 }
