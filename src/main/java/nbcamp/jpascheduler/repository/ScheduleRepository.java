@@ -5,6 +5,8 @@ import jakarta.persistence.PersistenceContext;
 import nbcamp.jpascheduler.domain.Schedule;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public class ScheduleRepository {
 
@@ -19,4 +21,10 @@ public class ScheduleRepository {
         return em.find(Schedule.class, id);
     }
 
+    public List<Schedule> findAll(int offset, int limit) {
+        return em.createQuery("select s from Schedule s order by updateAt desc", Schedule.class)
+                .setFirstResult(offset)
+                .setMaxResults(limit)
+                .getResultList();
+    }
 }

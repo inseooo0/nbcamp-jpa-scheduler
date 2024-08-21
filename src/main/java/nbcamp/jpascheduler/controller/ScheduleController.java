@@ -9,6 +9,9 @@ import nbcamp.jpascheduler.service.ScheduleService;
 import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/schedule")
 @RequiredArgsConstructor
@@ -27,6 +30,17 @@ public class ScheduleController {
     public ScheduleResponseDto getSchedule(@PathVariable Long scheduleId) {
         Schedule findSchedule = scheduleService.findById(scheduleId);
         return modelMapper.map(findSchedule, ScheduleResponseDto.class);
+    }
+
+    @GetMapping
+    public List<ScheduleResponseDto> getAllSchedule(@RequestParam("pageNum") int pageNum,
+                                                    @RequestParam(value = "pageSize", required = false, defaultValue = "10") int pageSize) {
+        List<Schedule> scheduleList = scheduleService.findAll(pageNum, pageSize);
+        List<ScheduleResponseDto> dtoList = new ArrayList<>();
+        for (Schedule schedule : scheduleList) {
+            dtoList.add(modelMapper.map(schedule, ScheduleResponseDto.class));
+        }
+        return dtoList;
     }
 
     @PutMapping("/{scheduleId}")

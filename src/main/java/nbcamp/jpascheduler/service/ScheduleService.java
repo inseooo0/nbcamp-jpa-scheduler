@@ -8,6 +8,8 @@ import nbcamp.jpascheduler.repository.ScheduleRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -26,6 +28,11 @@ public class ScheduleService {
 
     public Schedule findById(Long id) {
         return repository.findById(id);
+    }
+
+    public List<Schedule> findAll(int pageNum, int pageSize) {
+        int offset = (pageNum - 1) * pageSize;
+        return repository.findAll(offset, pageSize);
     }
 
     @Transactional
