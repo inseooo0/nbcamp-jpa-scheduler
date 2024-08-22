@@ -6,6 +6,6 @@ import lombok.Setter;
 @Getter @Setter
 public class CommentCreateDto {
     private Long scheduleId;
-    private String name;
+    private Long userId;
     private String content;
 }

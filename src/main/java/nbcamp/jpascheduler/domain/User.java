@@ -9,22 +9,14 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
-@Getter
-@Setter
-public class Comment {
+@Getter @Setter
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "schedule_id")
-    private Schedule schedule;
-
-    private String content;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    private String name;
+    private String email;
 
     @CreationTimestamp // INSERT 시 자동으로 값을 채워줌
     @Column(name = "create_at")
@@ -33,4 +25,5 @@ public class Comment {
     @Column(name = "update_at")
     @UpdateTimestamp // UPDATE 시 자동으로 값을 채워줌
     private LocalDateTime updateAt = LocalDateTime.now();
+
 }

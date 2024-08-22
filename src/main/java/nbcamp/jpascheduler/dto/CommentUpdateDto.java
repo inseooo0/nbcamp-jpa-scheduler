@@ -6,6 +6,6 @@ import lombok.Setter;
 @Getter @Setter
 public class CommentUpdateDto {
     private Long scheduleId;
-    private String name;
+    private Long userId;
     private String content;
 }

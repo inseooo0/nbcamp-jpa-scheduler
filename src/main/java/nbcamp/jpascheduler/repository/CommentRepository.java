@@ -2,7 +2,6 @@ package nbcamp.jpascheduler.repository;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import lombok.RequiredArgsConstructor;
 import nbcamp.jpascheduler.domain.Comment;
 import org.springframework.stereotype.Repository;
 

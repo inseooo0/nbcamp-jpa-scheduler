@@ -2,9 +2,11 @@ package nbcamp.jpascheduler.controller;
 
 import lombok.RequiredArgsConstructor;
 import nbcamp.jpascheduler.domain.Schedule;
+import nbcamp.jpascheduler.domain.User;
 import nbcamp.jpascheduler.dto.ScheduleCreateDto;
 import nbcamp.jpascheduler.dto.ScheduleResponseDto;
 import nbcamp.jpascheduler.dto.ScheduleUpdateDto;
+import nbcamp.jpascheduler.dto.UserResponseDto;
 import nbcamp.jpascheduler.service.ScheduleService;
 import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.*;
@@ -23,13 +25,25 @@ public class ScheduleController {
     @PostMapping
     ScheduleResponseDto saveSchedule(@RequestBody ScheduleCreateDto requestDto) {
         Schedule schedule = scheduleService.save(requestDto);
-        return modelMapper.map(schedule, ScheduleResponseDto.class);
+        List<User> users = schedule.findUsers();
+
+        ScheduleResponseDto responseDto = modelMapper.map(schedule, ScheduleResponseDto.class);
+        for (User user : users) {
+            responseDto.getUsers().add(modelMapper.map(user, UserResponseDto.class));
+        }
+        return responseDto;
     }
 
     @GetMapping("/{scheduleId}")
     public ScheduleResponseDto getSchedule(@PathVariable Long scheduleId) {
-        Schedule findSchedule = scheduleService.findById(scheduleId);
-        return modelMapper.map(findSchedule, ScheduleResponseDto.class);
+        Schedule schedule = scheduleService.findById(scheduleId);
+        List<User> users = schedule.findUsers();
+
+        ScheduleResponseDto responseDto = modelMapper.map(schedule, ScheduleResponseDto.class);
+        for (User user : users) {
+            responseDto.getUsers().add(modelMapper.map(user, UserResponseDto.class));
+        }
+        return responseDto;
     }
 
     @GetMapping
@@ -38,7 +52,13 @@ public class ScheduleController {
         List<Schedule> scheduleList = scheduleService.findAll(pageNum, pageSize);
         List<ScheduleResponseDto> dtoList = new ArrayList<>();
         for (Schedule schedule : scheduleList) {
-            dtoList.add(modelMapper.map(schedule, ScheduleResponseDto.class));
+            List<User> users = schedule.findUsers();
+
+            ScheduleResponseDto responseDto = modelMapper.map(schedule, ScheduleResponseDto.class);
+            for (User user : users) {
+                responseDto.getUsers().add(modelMapper.map(user, UserResponseDto.class));
+            }
+            dtoList.add(responseDto);
         }
         return dtoList;
     }
@@ -46,8 +66,14 @@ public class ScheduleController {
     @PutMapping("/{scheduleId}")
     public ScheduleResponseDto updateSchedule(@PathVariable Long scheduleId,
                                               @RequestBody ScheduleUpdateDto requestDto) {
-        Schedule updated = scheduleService.update(scheduleId, requestDto);
-        return modelMapper.map(updated, ScheduleResponseDto.class);
+        Schedule schedule = scheduleService.update(scheduleId, requestDto);
+        List<User> users = schedule.findUsers();
+
+        ScheduleResponseDto responseDto = modelMapper.map(schedule, ScheduleResponseDto.class);
+        for (User user : users) {
+            responseDto.getUsers().add(modelMapper.map(user, UserResponseDto.class));
+        }
+        return responseDto;
     }
 
     @DeleteMapping("/{scheduleId}")

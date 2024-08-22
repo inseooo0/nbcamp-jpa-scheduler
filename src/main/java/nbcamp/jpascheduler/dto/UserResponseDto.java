@@ -6,11 +6,10 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Getter @Setter
-public class CommentResponseDto {
+public class UserResponseDto {
     private Long id;
-    private Long scheduleId;
-    private String content;
-    private UserResponseDto user;
+    private String name;
+    private String email;
     private LocalDateTime createAt;
     private LocalDateTime updateAt;
 }

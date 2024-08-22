@@ -3,6 +3,7 @@ package nbcamp.jpascheduler.service;
 import lombok.RequiredArgsConstructor;
 import nbcamp.jpascheduler.domain.Comment;
 import nbcamp.jpascheduler.domain.Schedule;
+import nbcamp.jpascheduler.domain.User;
 import nbcamp.jpascheduler.dto.CommentCreateDto;
 import nbcamp.jpascheduler.dto.CommentUpdateDto;
 import nbcamp.jpascheduler.dto.ScheduleCreateDto;
@@ -18,14 +19,20 @@ import java.util.List;
 public class CommentService {
 
     private final ScheduleService scheduleService;
+    private final UserService userService;
     private final CommentRepository repository;
 
     @Transactional
     public Comment save(CommentCreateDto dto) {
         Comment comment = new Comment();
         Schedule schedule = scheduleService.findById(dto.getScheduleId());
-        comment.setName(dto.getName());
+        User user = userService.findById(dto.getUserId());
+
+        if (schedule == null) throw new IllegalArgumentException();
+        if (user == null) throw new IllegalArgumentException();
+
         comment.setSchedule(schedule);
+        comment.setUser(user);
         comment.setContent(dto.getContent());
         return repository.save(comment);
     }
@@ -43,7 +50,9 @@ public class CommentService {
         Comment comment = repository.findById(id);
         Schedule schedule = scheduleService.findById(dto.getScheduleId());
         comment.setSchedule(schedule);
-        comment.setName(dto.getName());
+        User user = userService.findById(dto.getUserId());
+        if (user == null) throw new IllegalArgumentException();
+        comment.setUser(user);
         comment.setContent(dto.getContent());
         return comment;
     }
