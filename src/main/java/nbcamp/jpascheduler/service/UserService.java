@@ -3,6 +3,7 @@ package nbcamp.jpascheduler.service;
 import lombok.RequiredArgsConstructor;
 import nbcamp.jpascheduler.domain.User;
 import nbcamp.jpascheduler.dto.UserCreateDto;
+import nbcamp.jpascheduler.dto.UserUpdateDto;
 import nbcamp.jpascheduler.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,5 +31,13 @@ public class UserService {
 
     public List<User> findAll() {
         return repository.findAll();
+    }
+
+    @Transactional
+    public User updateUser(Long id, UserUpdateDto updateDto) {
+        User user = repository.findById(id);
+        user.setName(updateDto.getName());
+        user.setEmail(updateDto.getEmail());
+        return user;
     }
 }

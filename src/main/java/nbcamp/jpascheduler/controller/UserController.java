@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import nbcamp.jpascheduler.domain.User;
 import nbcamp.jpascheduler.dto.UserCreateDto;
 import nbcamp.jpascheduler.dto.UserResponseDto;
+import nbcamp.jpascheduler.dto.UserUpdateDto;
 import nbcamp.jpascheduler.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.*;
@@ -40,5 +41,12 @@ public class UserController {
             dtoList.add(modelMapper.map(user, UserResponseDto.class));
         }
         return dtoList;
+    }
+
+    @PutMapping("/{userId}")
+    public UserResponseDto updateUser(@PathVariable Long userId,
+                                      @RequestBody UserUpdateDto requestDto) {
+        User user = userService.updateUser(userId, requestDto);
+        return modelMapper.map(user, UserResponseDto.class);
     }
 }
