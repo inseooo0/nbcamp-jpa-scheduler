@@ -40,4 +40,9 @@ public class UserService {
         user.setEmail(updateDto.getEmail());
         return user;
     }
+
+    @Transactional
+    public void removeById(Long id) {
+        repository.removeById(id);
+    }
 }

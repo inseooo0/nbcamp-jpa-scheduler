@@ -49,4 +49,10 @@ public class UserController {
         User user = userService.updateUser(userId, requestDto);
         return modelMapper.map(user, UserResponseDto.class);
     }
+
+    @DeleteMapping("/{userId}")
+    public String deleteUser(@PathVariable Long userId) {
+        userService.removeById(userId);
+        return "ok";
+    }
 }

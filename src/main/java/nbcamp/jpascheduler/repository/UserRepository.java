@@ -31,4 +31,9 @@ public class UserRepository {
         return em.createQuery("select u from User u", User.class)
                 .getResultList();
     }
+
+    public void removeById(Long id) {
+        User user = findById(id);
+        em.remove(user);
+    }
 }
