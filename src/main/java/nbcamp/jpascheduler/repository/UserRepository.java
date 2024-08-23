@@ -5,6 +5,8 @@ import jakarta.persistence.PersistenceContext;
 import nbcamp.jpascheduler.domain.User;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public class UserRepository {
 
@@ -23,5 +25,10 @@ public class UserRepository {
 
     public User findById(Long id) {
         return em.find(User.class, id);
+    }
+
+    public List<User> findAll() {
+        return em.createQuery("select u from User u", User.class)
+                .getResultList();
     }
 }

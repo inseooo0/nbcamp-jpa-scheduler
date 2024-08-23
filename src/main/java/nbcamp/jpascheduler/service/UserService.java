@@ -7,6 +7,8 @@ import nbcamp.jpascheduler.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -24,5 +26,9 @@ public class UserService {
 
     public User findById(Long id) {
         return repository.findById(id);
+    }
+
+    public List<User> findAll() {
+        return repository.findAll();
     }
 }
