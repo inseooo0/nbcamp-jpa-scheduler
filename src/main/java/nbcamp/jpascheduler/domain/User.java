@@ -17,6 +17,7 @@ public class User {
 
     private String name;
     private String email;
+    private String password;
 
     @CreationTimestamp // INSERT 시 자동으로 값을 채워줌
     @Column(name = "create_at")

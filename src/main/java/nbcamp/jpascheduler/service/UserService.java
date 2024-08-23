@@ -1,6 +1,7 @@
 package nbcamp.jpascheduler.service;
 
 import lombok.RequiredArgsConstructor;
+import nbcamp.jpascheduler.config.PasswordEncoder;
 import nbcamp.jpascheduler.domain.User;
 import nbcamp.jpascheduler.dto.UserCreateDto;
 import nbcamp.jpascheduler.dto.UserUpdateDto;
@@ -16,12 +17,14 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository repository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public User save(UserCreateDto dto) {
         User user = new User();
         user.setName(dto.getName());
         user.setEmail(dto.getEmail());
+        user.setPassword(passwordEncoder.encode(dto.getPassword()));
         return repository.save(user);
     }
 
