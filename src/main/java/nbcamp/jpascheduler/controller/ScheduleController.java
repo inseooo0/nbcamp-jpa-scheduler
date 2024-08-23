@@ -3,10 +3,7 @@ package nbcamp.jpascheduler.controller;
 import lombok.RequiredArgsConstructor;
 import nbcamp.jpascheduler.domain.Schedule;
 import nbcamp.jpascheduler.domain.User;
-import nbcamp.jpascheduler.dto.ScheduleCreateDto;
-import nbcamp.jpascheduler.dto.ScheduleResponseDto;
-import nbcamp.jpascheduler.dto.ScheduleUpdateDto;
-import nbcamp.jpascheduler.dto.UserResponseDto;
+import nbcamp.jpascheduler.dto.*;
 import nbcamp.jpascheduler.service.ScheduleService;
 import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.*;
@@ -47,18 +44,12 @@ public class ScheduleController {
     }
 
     @GetMapping
-    public List<ScheduleResponseDto> getAllSchedule(@RequestParam("pageNum") int pageNum,
-                                                    @RequestParam(value = "pageSize", required = false, defaultValue = "10") int pageSize) {
+    public List<ScheduleResponseDtoVer2> getAllSchedule(@RequestParam("pageNum") int pageNum,
+                                                        @RequestParam(value = "pageSize", required = false, defaultValue = "10") int pageSize) {
         List<Schedule> scheduleList = scheduleService.findAll(pageNum, pageSize);
-        List<ScheduleResponseDto> dtoList = new ArrayList<>();
+        List<ScheduleResponseDtoVer2> dtoList = new ArrayList<>();
         for (Schedule schedule : scheduleList) {
-            List<User> users = schedule.findUsers();
-
-            ScheduleResponseDto responseDto = modelMapper.map(schedule, ScheduleResponseDto.class);
-            for (User user : users) {
-                responseDto.getUsers().add(modelMapper.map(user, UserResponseDto.class));
-            }
-            dtoList.add(responseDto);
+            dtoList.add(modelMapper.map(schedule, ScheduleResponseDtoVer2.class));
         }
         return dtoList;
     }
@@ -77,7 +68,7 @@ public class ScheduleController {
     }
 
     @DeleteMapping("/{scheduleId}")
-    public String removeSchedule(@PathVariable Long scheduleId) {
+    public String deleteSchedule(@PathVariable Long scheduleId) {
         scheduleService.removeById(scheduleId);
         return "ok";
     }
