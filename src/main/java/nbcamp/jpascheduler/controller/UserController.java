@@ -1,12 +1,18 @@
 package nbcamp.jpascheduler.controller;
 
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import nbcamp.jpascheduler.domain.User;
 import nbcamp.jpascheduler.dto.UserCreateDto;
 import nbcamp.jpascheduler.dto.UserResponseDto;
 import nbcamp.jpascheduler.dto.UserUpdateDto;
+import nbcamp.jpascheduler.jwt.JwtUtil;
 import nbcamp.jpascheduler.service.UserService;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -19,11 +25,16 @@ public class UserController {
 
     private final UserService userService;
     private final ModelMapper modelMapper;
+    private final JwtUtil jwtUtil;
 
     @PostMapping
-    public UserResponseDto saveUser(@RequestBody UserCreateDto requestDto) {
+    public ResponseEntity<UserResponseDto> saveUser(@RequestBody UserCreateDto requestDto) {
         User saved = userService.save(requestDto);
-        return modelMapper.map(saved, UserResponseDto.class);
+        String token = jwtUtil.createToken(saved.getName());
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", token);
+        return new ResponseEntity<>(modelMapper.map(saved, UserResponseDto.class),
+                headers, HttpStatus.OK);
     }
 
     @GetMapping("/{userId}")

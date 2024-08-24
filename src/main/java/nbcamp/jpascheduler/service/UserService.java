@@ -5,6 +5,7 @@ import nbcamp.jpascheduler.config.PasswordEncoder;
 import nbcamp.jpascheduler.domain.User;
 import nbcamp.jpascheduler.dto.UserCreateDto;
 import nbcamp.jpascheduler.dto.UserUpdateDto;
+import nbcamp.jpascheduler.jwt.JwtUtil;
 import nbcamp.jpascheduler.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
