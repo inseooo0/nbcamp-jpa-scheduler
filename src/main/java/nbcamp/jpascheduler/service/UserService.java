@@ -40,7 +40,7 @@ public class UserService {
 
     public boolean login(LoginRequestDto dto) {
         User user = findByEmail(dto.getEmail());
-        if (user.getPassword().equals(passwordEncoder.encode(dto.getPassword()))) return false;
+        if (passwordEncoder.matches(dto.getPassword(), user.getPassword())) return false;
         return true;
     }
 
