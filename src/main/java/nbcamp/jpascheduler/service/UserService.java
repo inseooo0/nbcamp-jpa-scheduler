@@ -36,6 +36,13 @@ public class UserService {
         return checkId.get();
     }
 
+    public User findByEmail(String email) {
+        Optional<User> checkEmail = repository.findByEmail(email);
+        if (checkEmail.isEmpty()) throw new IllegalArgumentException();
+
+        return checkEmail.get();
+    }
+
     public List<User> findAll() {
         return repository.findAll();
     }

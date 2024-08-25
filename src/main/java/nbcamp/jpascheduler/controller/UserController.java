@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import nbcamp.jpascheduler.domain.User;
+import nbcamp.jpascheduler.dto.LoginRequestDto;
 import nbcamp.jpascheduler.dto.UserCreateDto;
 import nbcamp.jpascheduler.dto.UserResponseDto;
 import nbcamp.jpascheduler.dto.UserUpdateDto;
@@ -34,6 +35,16 @@ public class UserController {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", token);
         return new ResponseEntity<>(modelMapper.map(saved, UserResponseDto.class),
+                headers, HttpStatus.OK);
+    }
+
+    @GetMapping("/login")
+    public ResponseEntity<UserResponseDto> login(@RequestBody LoginRequestDto requestDto) {
+        User user = userService.findByEmail(requestDto.getEmail());
+        String token = jwtUtil.createToken(user.getName());
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", token);
+        return new ResponseEntity<>(modelMapper.map(user, UserResponseDto.class),
                 headers, HttpStatus.OK);
     }
 
