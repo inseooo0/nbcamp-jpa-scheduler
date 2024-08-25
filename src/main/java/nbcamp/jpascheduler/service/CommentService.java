@@ -6,12 +6,12 @@ import nbcamp.jpascheduler.domain.Schedule;
 import nbcamp.jpascheduler.domain.User;
 import nbcamp.jpascheduler.dto.CommentCreateDto;
 import nbcamp.jpascheduler.dto.CommentUpdateDto;
-import nbcamp.jpascheduler.dto.ScheduleCreateDto;
 import nbcamp.jpascheduler.repository.CommentRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -38,7 +38,11 @@ public class CommentService {
     }
 
     public Comment findById(Long id) {
-        return repository.findById(id);
+        Optional<Comment> comment = repository.findById(id);
+        if (comment.isEmpty()) {
+            throw new IllegalArgumentException();
+        }
+        return comment.get();
     }
 
     public List<Comment> findAll() {
@@ -47,9 +51,13 @@ public class CommentService {
 
     @Transactional
     public Comment update(Long id, CommentUpdateDto dto) {
-        Comment comment = repository.findById(id);
+        Optional<Comment> checkId = repository.findById(id);
+        if (checkId.isEmpty()) throw new IllegalArgumentException();
+
+        Comment comment = checkId.get();
         Schedule schedule = scheduleService.findById(dto.getScheduleId());
         comment.setSchedule(schedule);
+
         User user = userService.findById(dto.getUserId());
         if (user == null) throw new IllegalArgumentException();
         comment.setUser(user);
@@ -59,6 +67,6 @@ public class CommentService {
 
     @Transactional
     public void removeById(Long id) {
-        repository.removeById(id);
+        repository.deleteById(id);
     }
 }

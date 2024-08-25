@@ -24,6 +24,6 @@ public class ScheduleManagementService {
 
     @Transactional
     public void removeById(Long id) {
-        repository.removeById(id);
+        repository.deleteById(id);
     }
 }

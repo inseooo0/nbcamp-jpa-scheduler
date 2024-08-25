@@ -1,35 +1,7 @@
 package nbcamp.jpascheduler.repository;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import nbcamp.jpascheduler.domain.Schedule;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
-
-@Repository
-public class ScheduleRepository {
-
-    @PersistenceContext EntityManager em;
-
-    public Schedule save(Schedule schedule) {
-        em.persist(schedule);
-        return schedule;
-    }
-
-    public Schedule findById(Long id) {
-        return em.find(Schedule.class, id);
-    }
-
-    public List<Schedule> findAll(int offset, int limit) {
-        return em.createQuery("select s from Schedule s order by updateAt desc", Schedule.class)
-                .setFirstResult(offset)
-                .setMaxResults(limit)
-                .getResultList();
-    }
-
-    public void removeById(Long id) {
-        Schedule schedule = em.find(Schedule.class, id);
-        em.remove(schedule);
-    }
+public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
 }

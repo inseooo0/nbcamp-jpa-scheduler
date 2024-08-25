@@ -7,11 +7,14 @@ import nbcamp.jpascheduler.domain.User;
 import nbcamp.jpascheduler.dto.ScheduleCreateDto;
 import nbcamp.jpascheduler.dto.ScheduleUpdateDto;
 import nbcamp.jpascheduler.repository.ScheduleRepository;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -39,17 +42,24 @@ public class ScheduleService {
     }
 
     public Schedule findById(Long id) {
-        return repository.findById(id);
+        Optional<Schedule> checkId = repository.findById(id);
+        if (checkId.isEmpty()) throw new IllegalArgumentException();
+
+        return checkId.get();
     }
 
     public List<Schedule> findAll(int pageNum, int pageSize) {
         int offset = (pageNum - 1) * pageSize;
-        return repository.findAll(offset, pageSize);
+        PageRequest pageRequest = PageRequest.of(pageNum, pageSize, Sort.by("update_at").descending());
+        return repository.findAll(pageRequest).getContent();
     }
 
     @Transactional
     public Schedule update(Long id, ScheduleUpdateDto dto) {
-        Schedule schedule = repository.findById(id);
+        Optional<Schedule> checkId = repository.findById(id);
+        if (checkId.isEmpty()) throw new IllegalArgumentException();
+
+        Schedule schedule = checkId.get();
         schedule.setTitle(dto.getTitle());
         schedule.setContent(dto.getContent());
         List<Long> userIds = dto.getUserIds();
@@ -80,6 +90,6 @@ public class ScheduleService {
 
     @Transactional
     public void removeById(Long id) {
-        repository.removeById(id);
+        repository.deleteById(id);
     }
 }

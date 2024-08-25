@@ -27,7 +27,7 @@ public class UserController {
     private final ModelMapper modelMapper;
     private final JwtUtil jwtUtil;
 
-    @PostMapping
+    @PostMapping("/signup")
     public ResponseEntity<UserResponseDto> saveUser(@RequestBody UserCreateDto requestDto) {
         User saved = userService.save(requestDto);
         String token = jwtUtil.createToken(saved.getName());

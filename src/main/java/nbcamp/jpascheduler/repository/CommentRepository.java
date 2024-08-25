@@ -1,34 +1,8 @@
 package nbcamp.jpascheduler.repository;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import nbcamp.jpascheduler.domain.Comment;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
 
-@Repository
-public class CommentRepository {
-
-    @PersistenceContext
-    EntityManager em;
-
-    public Comment save(Comment comment) {
-        em.persist(comment);
-        return comment;
-    }
-
-    public Comment findById(Long id) {
-        return em.find(Comment.class, id);
-    }
-
-    public List<Comment> findAll() {
-        return em.createQuery("select c from Comment c", Comment.class)
-                .getResultList();
-    }
-
-    public void removeById(Long id) {
-        Comment comment = findById(id);
-        em.remove(comment);
-    }
+public interface CommentRepository extends JpaRepository<Comment, Long> {
 }
