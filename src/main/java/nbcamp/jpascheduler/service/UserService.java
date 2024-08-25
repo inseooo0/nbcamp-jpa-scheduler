@@ -3,10 +3,12 @@ package nbcamp.jpascheduler.service;
 import lombok.RequiredArgsConstructor;
 import nbcamp.jpascheduler.config.PasswordEncoder;
 import nbcamp.jpascheduler.domain.User;
+import nbcamp.jpascheduler.dto.LoginRequestDto;
 import nbcamp.jpascheduler.dto.UserCreateDto;
 import nbcamp.jpascheduler.dto.UserUpdateDto;
 import nbcamp.jpascheduler.jwt.JwtUtil;
 import nbcamp.jpascheduler.repository.UserRepository;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,11 +25,23 @@ public class UserService {
 
     @Transactional
     public User save(UserCreateDto dto) {
+        Optional<User> checkEmail = repository.findByEmail(dto.getEmail());
+        if (checkEmail.isPresent()) throw new IllegalArgumentException();
+
+        Optional<User> checkName = repository.findByName(dto.getName());
+        if (checkName.isPresent()) throw new IllegalArgumentException();
+
         User user = new User();
         user.setName(dto.getName());
         user.setEmail(dto.getEmail());
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
         return repository.save(user);
+    }
+
+    public boolean login(LoginRequestDto dto) {
+        User user = findByEmail(dto.getEmail());
+        if (user.getPassword().equals(passwordEncoder.encode(dto.getPassword()))) return false;
+        return true;
     }
 
     public User findById(Long id) {

@@ -40,6 +40,8 @@ public class UserController {
 
     @GetMapping("/login")
     public ResponseEntity<UserResponseDto> login(@RequestBody LoginRequestDto requestDto) {
+        if (userService.login(requestDto)) throw new IllegalArgumentException();
+
         User user = userService.findByEmail(requestDto.getEmail());
         String token = jwtUtil.createToken(user.getName());
         HttpHeaders headers = new HttpHeaders();
