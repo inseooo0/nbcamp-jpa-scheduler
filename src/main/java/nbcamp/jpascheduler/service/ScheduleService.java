@@ -49,8 +49,7 @@ public class ScheduleService {
     }
 
     public List<Schedule> findAll(int pageNum, int pageSize) {
-        int offset = (pageNum - 1) * pageSize;
-        PageRequest pageRequest = PageRequest.of(pageNum, pageSize, Sort.by("update_at").descending());
+        PageRequest pageRequest = PageRequest.of(pageNum, pageSize, Sort.by("updateAt").descending());
         return repository.findAll(pageRequest).getContent();
     }
 

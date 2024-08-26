@@ -6,7 +6,7 @@ import nbcamp.jpascheduler.dto.LoginRequestDto;
 import nbcamp.jpascheduler.dto.UserCreateDto;
 import nbcamp.jpascheduler.dto.UserResponseDto;
 import nbcamp.jpascheduler.dto.UserUpdateDto;
-import nbcamp.jpascheduler.jwt.AuthenticationMethod;
+import nbcamp.jpascheduler.jwt.AuthorizationMethod;
 import nbcamp.jpascheduler.jwt.JwtUtil;
 import nbcamp.jpascheduler.service.UserService;
 import org.modelmapper.ModelMapper;
@@ -27,7 +27,7 @@ public class UserController {
     private final ModelMapper modelMapper;
     private final JwtUtil jwtUtil;
 
-    @AuthenticationMethod
+    @AuthorizationMethod
     @PostMapping("/signup")
     public ResponseEntity<UserResponseDto> saveUser(@RequestBody UserCreateDto requestDto) {
         User saved = userService.save(requestDto);
@@ -38,7 +38,7 @@ public class UserController {
                 headers, HttpStatus.OK);
     }
 
-    @AuthenticationMethod
+    @AuthorizationMethod
     @GetMapping("/login")
     public ResponseEntity<UserResponseDto> login(@RequestBody LoginRequestDto requestDto) {
         if (userService.login(requestDto)) throw new IllegalArgumentException();

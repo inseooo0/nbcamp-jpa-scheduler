@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import nbcamp.jpascheduler.domain.Schedule;
 import nbcamp.jpascheduler.domain.User;
 import nbcamp.jpascheduler.dto.*;
+import nbcamp.jpascheduler.jwt.AdminAuthenticationMethod;
 import nbcamp.jpascheduler.service.ScheduleService;
 import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.*;
@@ -54,6 +55,7 @@ public class ScheduleController {
         return dtoList;
     }
 
+    @AdminAuthenticationMethod
     @PutMapping("/{scheduleId}")
     public ScheduleResponseDto updateSchedule(@PathVariable Long scheduleId,
                                               @RequestBody ScheduleUpdateDto requestDto) {
@@ -67,6 +69,7 @@ public class ScheduleController {
         return responseDto;
     }
 
+    @AdminAuthenticationMethod
     @DeleteMapping("/{scheduleId}")
     public String deleteSchedule(@PathVariable Long scheduleId) {
         scheduleService.removeById(scheduleId);
