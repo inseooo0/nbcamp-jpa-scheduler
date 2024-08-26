@@ -6,6 +6,8 @@ import nbcamp.jpascheduler.domain.Schedule;
 import nbcamp.jpascheduler.domain.User;
 import nbcamp.jpascheduler.dto.CommentCreateDto;
 import nbcamp.jpascheduler.dto.CommentUpdateDto;
+import nbcamp.jpascheduler.exception.ApiException;
+import nbcamp.jpascheduler.exception.CommonErrorCode;
 import nbcamp.jpascheduler.repository.CommentRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,8 +30,8 @@ public class CommentService {
         Schedule schedule = scheduleService.findById(dto.getScheduleId());
         User user = userService.findById(dto.getUserId());
 
-        if (schedule == null) throw new IllegalArgumentException();
-        if (user == null) throw new IllegalArgumentException();
+        if (schedule == null) throw new ApiException(CommonErrorCode.INVALID_PARAMETER);
+        if (user == null) throw new ApiException(CommonErrorCode.INVALID_PARAMETER);
 
         comment.setSchedule(schedule);
         comment.setUser(user);
@@ -40,7 +42,7 @@ public class CommentService {
     public Comment findById(Long id) {
         Optional<Comment> comment = repository.findById(id);
         if (comment.isEmpty()) {
-            throw new IllegalArgumentException();
+            throw new ApiException(CommonErrorCode.INVALID_PARAMETER);
         }
         return comment.get();
     }
@@ -52,14 +54,14 @@ public class CommentService {
     @Transactional
     public Comment update(Long id, CommentUpdateDto dto) {
         Optional<Comment> checkId = repository.findById(id);
-        if (checkId.isEmpty()) throw new IllegalArgumentException();
+        if (checkId.isEmpty()) throw new ApiException(CommonErrorCode.INVALID_PARAMETER);
 
         Comment comment = checkId.get();
         Schedule schedule = scheduleService.findById(dto.getScheduleId());
         comment.setSchedule(schedule);
 
         User user = userService.findById(dto.getUserId());
-        if (user == null) throw new IllegalArgumentException();
+        if (user == null) throw new ApiException(CommonErrorCode.INVALID_PARAMETER);
         comment.setUser(user);
         comment.setContent(dto.getContent());
         return comment;

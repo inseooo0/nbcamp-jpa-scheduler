@@ -41,9 +41,8 @@ public class UserController {
     @AuthorizationMethod
     @GetMapping("/login")
     public ResponseEntity<UserResponseDto> login(@RequestBody LoginRequestDto requestDto) {
-        if (userService.login(requestDto)) throw new IllegalArgumentException();
 
-        User user = userService.findByEmail(requestDto.getEmail());
+        User user = userService.login(requestDto);
         String token = jwtUtil.createToken(user);
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", token);

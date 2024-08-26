@@ -5,6 +5,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nbcamp.jpascheduler.domain.UserRole;
+import nbcamp.jpascheduler.exception.ApiException;
+import nbcamp.jpascheduler.exception.CommonErrorCode;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -32,10 +34,10 @@ public class JwtAuthenticationFilter {
             String token = jwtUtil.getJwtFromHeader(request);
 
             if (token == null) {
-                throw new IllegalArgumentException("token null");
+                throw new ApiException(CommonErrorCode.JWT_TOKEN_NOT_EXIT);
             }
 
-            if (!jwtUtil.validateToken(token)) throw new IllegalArgumentException("invalid token");
+            if (!jwtUtil.validateToken(token)) throw new ApiException(CommonErrorCode.INVALID_JWT_TOKEN);
         }
     }
 
@@ -51,7 +53,7 @@ public class JwtAuthenticationFilter {
             Claims userInfo = jwtUtil.getUserInfoFromToken(token);
 
             if (!userInfo.get(AUTHORIZATION_KEY).equals("ADMIN")) {
-                throw new IllegalArgumentException("not admin");
+                throw new ApiException(CommonErrorCode.NOT_AUTHORIZED);
             }
         }
     }

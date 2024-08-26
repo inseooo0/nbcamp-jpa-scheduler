@@ -7,9 +7,10 @@ import nbcamp.jpascheduler.domain.UserRole;
 import nbcamp.jpascheduler.dto.LoginRequestDto;
 import nbcamp.jpascheduler.dto.UserCreateDto;
 import nbcamp.jpascheduler.dto.UserUpdateDto;
-import nbcamp.jpascheduler.jwt.JwtUtil;
+import nbcamp.jpascheduler.exception.ApiException;
+import nbcamp.jpascheduler.exception.CommonErrorCode;
+import nbcamp.jpascheduler.exception.ErrorCode;
 import nbcamp.jpascheduler.repository.UserRepository;
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,10 +30,10 @@ public class UserService {
     @Transactional
     public User save(UserCreateDto dto) {
         Optional<User> checkEmail = repository.findByEmail(dto.getEmail());
-        if (checkEmail.isPresent()) throw new IllegalArgumentException();
+        if (checkEmail.isPresent()) throw new ApiException(CommonErrorCode.INVALID_PARAMETER);
 
         Optional<User> checkName = repository.findByName(dto.getName());
-        if (checkName.isPresent()) throw new IllegalArgumentException();
+        if (checkName.isPresent()) throw new ApiException(CommonErrorCode.INVALID_PARAMETER);
 
         User user = new User();
         user.setName(dto.getName());
@@ -44,21 +45,23 @@ public class UserService {
         return repository.save(user);
     }
 
-    public boolean login(LoginRequestDto dto) {
+    public User login(LoginRequestDto dto) {
         User user = findByEmail(dto.getEmail());
-        if (passwordEncoder.matches(dto.getPassword(), user.getPassword())) return false;
-        return true;
+        if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
+            throw new ApiException(CommonErrorCode.INCORRECT_LOGIN_INFO);
+        }
+        return user;
     }
 
     public User findById(Long id) {
         Optional<User> checkId = repository.findById(id);
-        if (checkId.isEmpty()) throw new IllegalArgumentException();
+        if (checkId.isEmpty()) throw new ApiException(CommonErrorCode.INVALID_PARAMETER);
         return checkId.get();
     }
 
     public User findByEmail(String email) {
         Optional<User> checkEmail = repository.findByEmail(email);
-        if (checkEmail.isEmpty()) throw new IllegalArgumentException();
+        if (checkEmail.isEmpty()) throw new ApiException(CommonErrorCode.INVALID_PARAMETER);
 
         return checkEmail.get();
     }
@@ -70,7 +73,7 @@ public class UserService {
     @Transactional
     public User updateUser(Long id, UserUpdateDto updateDto) {
         Optional<User> checkId = repository.findById(id);
-        if (checkId.isEmpty()) throw new IllegalArgumentException();
+        if (checkId.isEmpty()) throw new ApiException(CommonErrorCode.INVALID_PARAMETER);
 
         User user = checkId.get();
         user.setName(updateDto.getName());

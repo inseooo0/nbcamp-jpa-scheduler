@@ -6,6 +6,8 @@ import nbcamp.jpascheduler.domain.ScheduleManagement;
 import nbcamp.jpascheduler.domain.User;
 import nbcamp.jpascheduler.dto.ScheduleCreateDto;
 import nbcamp.jpascheduler.dto.ScheduleUpdateDto;
+import nbcamp.jpascheduler.exception.ApiException;
+import nbcamp.jpascheduler.exception.CommonErrorCode;
 import nbcamp.jpascheduler.repository.ScheduleRepository;
 import org.apache.tomcat.util.json.JSONParser;
 import org.json.JSONArray;
@@ -45,7 +47,7 @@ public class ScheduleService {
         for (Long userId : userIds) {
             User user = userService.findById(userId);
             if (user == null) {
-                throw new IllegalArgumentException();
+                throw new ApiException(CommonErrorCode.INVALID_PARAMETER);
             }
             schedule.getManagementList().add(scheduleManagementService.save(schedule, user));
         }
@@ -78,7 +80,7 @@ public class ScheduleService {
 
     public Schedule findById(Long id) {
         Optional<Schedule> checkId = repository.findById(id);
-        if (checkId.isEmpty()) throw new IllegalArgumentException();
+        if (checkId.isEmpty()) throw new ApiException(CommonErrorCode.INVALID_PARAMETER);
 
         return checkId.get();
     }
@@ -91,7 +93,7 @@ public class ScheduleService {
     @Transactional
     public Schedule update(Long id, ScheduleUpdateDto dto) {
         Optional<Schedule> checkId = repository.findById(id);
-        if (checkId.isEmpty()) throw new IllegalArgumentException();
+        if (checkId.isEmpty()) throw new ApiException(CommonErrorCode.INVALID_PARAMETER);
 
         Schedule schedule = checkId.get();
         schedule.setTitle(dto.getTitle());
@@ -112,7 +114,7 @@ public class ScheduleService {
             if (!currentUserIds.contains(userId)) {
                 User user = userService.findById(userId);
                 if (user == null) {
-                    throw new IllegalArgumentException();
+                    throw new ApiException(CommonErrorCode.INVALID_PARAMETER);
                 }
                 ScheduleManagement newManagement = scheduleManagementService.save(schedule, user);
                 currentManagements.add(newManagement);
