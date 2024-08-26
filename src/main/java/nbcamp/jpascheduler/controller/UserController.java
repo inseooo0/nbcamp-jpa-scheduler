@@ -31,7 +31,7 @@ public class UserController {
     @PostMapping("/signup")
     public ResponseEntity<UserResponseDto> saveUser(@RequestBody UserCreateDto requestDto) {
         User saved = userService.save(requestDto);
-        String token = jwtUtil.createToken(saved.getName());
+        String token = jwtUtil.createToken(saved);
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", token);
         return new ResponseEntity<>(modelMapper.map(saved, UserResponseDto.class),
@@ -44,7 +44,7 @@ public class UserController {
         if (userService.login(requestDto)) throw new IllegalArgumentException();
 
         User user = userService.findByEmail(requestDto.getEmail());
-        String token = jwtUtil.createToken(user.getName());
+        String token = jwtUtil.createToken(user);
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", token);
         return new ResponseEntity<>(modelMapper.map(user, UserResponseDto.class),

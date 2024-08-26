@@ -10,6 +10,7 @@ public class UserResponseDto {
     private Long id;
     private String name;
     private String email;
+    private String userRole;
     private LocalDateTime createAt;
     private LocalDateTime updateAt;
 }

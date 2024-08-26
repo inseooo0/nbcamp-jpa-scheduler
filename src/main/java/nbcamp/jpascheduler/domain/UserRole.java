@@ -1,5 +1,7 @@
 package nbcamp.jpascheduler.domain;
 
 public enum UserRole {
-    USER;
+    ADMIN,USER;
+
+    public static final String ADMIN_TOKEN = "12345";
 }

@@ -5,7 +5,7 @@ import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
-import nbcamp.jpascheduler.domain.UserRole;
+import nbcamp.jpascheduler.domain.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.StringUtils;
 
@@ -36,13 +36,13 @@ public class JwtUtil {
     }
 
     // 토큰 생성
-    public String createToken(String username) {
+    public String createToken(User user) {
         Date date = new Date();
 
         return BEARER_PREFIX +
                 Jwts.builder()
-                        .setSubject(username) // 사용자 식별자값(ID)
-                        .claim(AUTHORIZATION_KEY, UserRole.USER) // 사용자 권한
+                        .setSubject(user.getName()) // 사용자 식별자값(ID)
+                        .claim(AUTHORIZATION_KEY, user.getUserRole()) // 사용자 권한
                         .setExpiration(new Date(date.getTime() + TOKEN_TIME)) // 만료 시간
                         .setIssuedAt(date) // 발급일
                         .signWith(key, signatureAlgorithm) // 암호화 알고리즘

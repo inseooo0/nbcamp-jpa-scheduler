@@ -21,6 +21,9 @@ public class User {
     private String email;
     @Column(nullable = false)
     private String password;
+    @Column(name = "user_role")
+    @Enumerated(value = EnumType.STRING)
+    private UserRole userRole = UserRole.USER;
 
     @CreationTimestamp // INSERT 시 자동으로 값을 채워줌
     @Column(name = "create_at")

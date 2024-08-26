@@ -3,6 +3,7 @@ package nbcamp.jpascheduler.service;
 import lombok.RequiredArgsConstructor;
 import nbcamp.jpascheduler.config.PasswordEncoder;
 import nbcamp.jpascheduler.domain.User;
+import nbcamp.jpascheduler.domain.UserRole;
 import nbcamp.jpascheduler.dto.LoginRequestDto;
 import nbcamp.jpascheduler.dto.UserCreateDto;
 import nbcamp.jpascheduler.dto.UserUpdateDto;
@@ -14,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+
+import static nbcamp.jpascheduler.domain.UserRole.ADMIN_TOKEN;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +38,9 @@ public class UserService {
         user.setName(dto.getName());
         user.setEmail(dto.getEmail());
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
+        if (dto.getAdminToken() != null && dto.getAdminToken().equals(ADMIN_TOKEN)) {
+            user.setUserRole(UserRole.ADMIN);
+        }
         return repository.save(user);
     }
 
