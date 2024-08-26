@@ -26,6 +26,8 @@ public class Schedule {
     @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL)
     private List<Comment> comments;
 
+    private String weather;
+
     @CreationTimestamp // INSERT 시 자동으로 값을 채워줌
     @Column(name = "create_at")
     private LocalDateTime createAt = LocalDateTime.now();

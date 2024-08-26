@@ -12,6 +12,7 @@ public class ScheduleResponseDtoVer2 {
     private Long id;
     private String title;
     private String content;
+    private String weather;
     private LocalDateTime createAt;
     private LocalDateTime updateAt;
 }

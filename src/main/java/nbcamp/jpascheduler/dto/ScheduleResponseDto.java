@@ -13,6 +13,7 @@ public class ScheduleResponseDto {
     private List<UserResponseDto> users = new ArrayList<>();
     private String title;
     private String content;
+    private String weather;
     private LocalDateTime createAt;
     private LocalDateTime updateAt;
 }
