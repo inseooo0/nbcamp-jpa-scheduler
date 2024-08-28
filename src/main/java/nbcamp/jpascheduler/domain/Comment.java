@@ -2,6 +2,7 @@ package nbcamp.jpascheduler.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -10,7 +11,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@Setter
+@NoArgsConstructor
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,4 +34,16 @@ public class Comment {
     @Column(name = "update_at")
     @UpdateTimestamp // UPDATE 시 자동으로 값을 채워줌
     private LocalDateTime updateAt = LocalDateTime.now();
+
+    public Comment(Schedule schedule, User user, String content) {
+        this.schedule = schedule;
+        this.user = user;
+        this.content = content;
+    }
+
+    public void update(Schedule schedule, User user, String content) {
+        this.schedule = schedule;
+        this.user = user;
+        this.content = content;
+    }
 }

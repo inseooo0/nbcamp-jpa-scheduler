@@ -26,16 +26,13 @@ public class CommentService {
 
     @Transactional
     public Comment save(CommentCreateDto dto) {
-        Comment comment = new Comment();
         Schedule schedule = scheduleService.findById(dto.getScheduleId());
         User user = userService.findById(dto.getUserId());
 
         if (schedule == null) throw new ApiException(CommonErrorCode.INVALID_PARAMETER);
         if (user == null) throw new ApiException(CommonErrorCode.INVALID_PARAMETER);
 
-        comment.setSchedule(schedule);
-        comment.setUser(user);
-        comment.setContent(dto.getContent());
+        Comment comment = new Comment(schedule, user, dto.getContent());
         return repository.save(comment);
     }
 
@@ -58,12 +55,11 @@ public class CommentService {
 
         Comment comment = checkId.get();
         Schedule schedule = scheduleService.findById(dto.getScheduleId());
-        comment.setSchedule(schedule);
 
         User user = userService.findById(dto.getUserId());
         if (user == null) throw new ApiException(CommonErrorCode.INVALID_PARAMETER);
-        comment.setUser(user);
-        comment.setContent(dto.getContent());
+
+        comment.update(schedule, user, dto.getContent());
         return comment;
     }
 
