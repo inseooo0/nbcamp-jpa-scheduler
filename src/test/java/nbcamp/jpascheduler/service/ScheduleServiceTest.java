@@ -4,10 +4,7 @@ import jakarta.transaction.Transactional;
 import nbcamp.jpascheduler.domain.Comment;
 import nbcamp.jpascheduler.domain.Schedule;
 import nbcamp.jpascheduler.domain.User;
-import nbcamp.jpascheduler.dto.CommentCreateDto;
-import nbcamp.jpascheduler.dto.CommentUpdateDto;
-import nbcamp.jpascheduler.dto.ScheduleCreateDto;
-import nbcamp.jpascheduler.dto.UserCreateDto;
+import nbcamp.jpascheduler.dto.*;
 import nbcamp.jpascheduler.exception.ApiException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -56,4 +53,31 @@ class ScheduleServiceTest {
         Assertions.assertThatThrownBy(() -> scheduleService.save(scheduleCreateDto))
                 .isInstanceOf(ApiException.class);
     }
+
+    @Test
+    @Transactional
+    public void update() {
+        ScheduleCreateDto scheduleCreateDto = new ScheduleCreateDto();
+        scheduleCreateDto.setTitle("title");
+        scheduleCreateDto.setContent("content");
+        scheduleCreateDto.setUserIds(List.of(1L, 2L));
+
+        Schedule saved = scheduleService.save(scheduleCreateDto);
+
+        ScheduleUpdateDto scheduleUpdateDto = new ScheduleUpdateDto();
+        scheduleUpdateDto.setTitle("update title");
+        scheduleUpdateDto.setContent("update content");
+        scheduleUpdateDto.setUserIds(List.of(1L, 3L));
+
+        Schedule updated = scheduleService.update(saved.getId(), scheduleUpdateDto);
+        Schedule findSchedule = scheduleService.findById(updated.getId());
+
+        Assertions.assertThat(findSchedule.findUsers()).contains(userService.findById(1L));
+        Assertions.assertThat(findSchedule.findUsers()).doesNotContain(userService.findById(2L));
+        Assertions.assertThat(findSchedule.findUsers()).contains(userService.findById(3L));
+        Assertions.assertThat(findSchedule.getTitle()).isEqualTo("update title");
+        Assertions.assertThat(findSchedule.getContent()).isEqualTo("update content");
+
+    }
+
 }
