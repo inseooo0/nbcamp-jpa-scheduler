@@ -2,6 +2,7 @@ package nbcamp.jpascheduler.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -9,7 +10,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
-@Getter @Setter
+@Getter
+@NoArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,6 +23,7 @@ public class User {
     private String email;
     @Column(nullable = false)
     private String password;
+    @Setter
     @Column(name = "user_role")
     @Enumerated(value = EnumType.STRING)
     private UserRole userRole = UserRole.USER;
@@ -33,4 +36,14 @@ public class User {
     @UpdateTimestamp // UPDATE 시 자동으로 값을 채워줌
     private LocalDateTime updateAt = LocalDateTime.now();
 
+    public User(String name, String email, String password) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+    }
+
+    public void update(String name, String email) {
+        this.name = name;
+        this.email = email;
+    }
 }

@@ -28,6 +28,7 @@ public class Schedule {
     @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL)
     private List<Comment> comments;
 
+    @Setter
     private String weather;
 
     @CreationTimestamp // INSERT 시 자동으로 값을 채워줌
@@ -41,10 +42,6 @@ public class Schedule {
     public Schedule(String title, String content) {
         this.title = title;
         this.content = content;
-    }
-
-    public void setWeather(String weather) {
-        this.weather = weather;
     }
 
     public void update(String title, String content) {

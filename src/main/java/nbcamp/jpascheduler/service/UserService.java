@@ -9,7 +9,6 @@ import nbcamp.jpascheduler.dto.UserCreateDto;
 import nbcamp.jpascheduler.dto.UserUpdateDto;
 import nbcamp.jpascheduler.exception.ApiException;
 import nbcamp.jpascheduler.exception.CommonErrorCode;
-import nbcamp.jpascheduler.exception.ErrorCode;
 import nbcamp.jpascheduler.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,10 +34,7 @@ public class UserService {
         Optional<User> checkName = repository.findByName(dto.getName());
         if (checkName.isPresent()) throw new ApiException(CommonErrorCode.INVALID_PARAMETER);
 
-        User user = new User();
-        user.setName(dto.getName());
-        user.setEmail(dto.getEmail());
-        user.setPassword(passwordEncoder.encode(dto.getPassword()));
+        User user = new User(dto.getName(), dto.getEmail(), passwordEncoder.encode(dto.getPassword()));
         if (dto.getAdminToken() != null && dto.getAdminToken().equals(ADMIN_TOKEN)) {
             user.setUserRole(UserRole.ADMIN);
         }
@@ -76,8 +72,7 @@ public class UserService {
         if (checkId.isEmpty()) throw new ApiException(CommonErrorCode.INVALID_PARAMETER);
 
         User user = checkId.get();
-        user.setName(updateDto.getName());
-        user.setEmail(updateDto.getEmail());
+        user.update(updateDto.getName(), updateDto.getEmail());
         return user;
     }
 

@@ -1,9 +1,7 @@
 package nbcamp.jpascheduler.service;
 
 import jakarta.transaction.Transactional;
-import nbcamp.jpascheduler.domain.Comment;
 import nbcamp.jpascheduler.domain.Schedule;
-import nbcamp.jpascheduler.domain.User;
 import nbcamp.jpascheduler.dto.*;
 import nbcamp.jpascheduler.exception.ApiException;
 import org.assertj.core.api.Assertions;
