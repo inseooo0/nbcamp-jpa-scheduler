@@ -3,11 +3,11 @@ package nbcamp.jpascheduler.jwt;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import nbcamp.jpascheduler.domain.UserRole;
 import nbcamp.jpascheduler.exception.ApiException;
 import nbcamp.jpascheduler.exception.CommonErrorCode;
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.core.annotation.Order;
@@ -27,7 +27,7 @@ public class JwtAuthenticationFilter {
     @Component
     @Order(1)
     public class commonAuthenticationAspect {
-        @Before("execution(* nbcamp.jpascheduler.controller.*.*(..)) && !@annotation(nbcamp.jpascheduler.jwt.AuthorizationMethod)")
+        @Before("execution(* nbcamp.jpascheduler.controller.*.*(..)) && !@annotation(nbcamp.jpascheduler.annotation.AuthorizationMethod)")
         public void AuthToken(JoinPoint joinPoint) {
             HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
                     .getRequest();
@@ -45,17 +45,16 @@ public class JwtAuthenticationFilter {
     @Component
     @Order(2)
     public class adminAuthenticationAspect {
-        @Before("@annotation(nbcamp.jpascheduler.jwt.AdminAuthenticationMethod)")
+        @Before("@annotation(nbcamp.jpascheduler.annotation.AdminAuthenticationMethod)")
         public void AuthToken(JoinPoint joinPoint) {
             HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
                     .getRequest();
             String token = jwtUtil.getJwtFromHeader(request);
             Claims userInfo = jwtUtil.getUserInfoFromToken(token);
-
+            String subject = userInfo.getSubject();
             if (!userInfo.get(AUTHORIZATION_KEY).equals("ADMIN")) {
                 throw new ApiException(CommonErrorCode.NOT_AUTHORIZED);
             }
         }
     }
-
 }

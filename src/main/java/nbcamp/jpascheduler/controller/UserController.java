@@ -6,7 +6,7 @@ import nbcamp.jpascheduler.dto.LoginRequestDto;
 import nbcamp.jpascheduler.dto.UserCreateDto;
 import nbcamp.jpascheduler.dto.UserResponseDto;
 import nbcamp.jpascheduler.dto.UserUpdateDto;
-import nbcamp.jpascheduler.jwt.AuthorizationMethod;
+import nbcamp.jpascheduler.annotation.AuthorizationMethod;
 import nbcamp.jpascheduler.jwt.JwtUtil;
 import nbcamp.jpascheduler.service.UserService;
 import org.modelmapper.ModelMapper;

@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import nbcamp.jpascheduler.domain.Schedule;
 import nbcamp.jpascheduler.domain.User;
 import nbcamp.jpascheduler.dto.*;
-import nbcamp.jpascheduler.jwt.AdminAuthenticationMethod;
+import nbcamp.jpascheduler.annotation.AdminAuthenticationMethod;
 import nbcamp.jpascheduler.service.ScheduleService;
 import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.*;

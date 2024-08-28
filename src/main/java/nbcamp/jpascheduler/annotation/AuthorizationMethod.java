@@ -1,4 +1,4 @@
-package nbcamp.jpascheduler.jwt;
+package nbcamp.jpascheduler.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
