@@ -2,6 +2,7 @@ package nbcamp.jpascheduler.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CreationTimestamp;
@@ -12,7 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Getter @Setter
+@Getter
+@NoArgsConstructor
 public class Schedule {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -35,6 +37,20 @@ public class Schedule {
     @Column(name = "update_at")
     @UpdateTimestamp // UPDATE 시 자동으로 값을 채워줌
     private LocalDateTime updateAt = LocalDateTime.now();
+
+    public Schedule(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
+
+    public void setWeather(String weather) {
+        this.weather = weather;
+    }
+
+    public void update(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
 
     public void removeUser(User user) {
         this.managementList.removeIf(scheduleManagement -> scheduleManagement.getUser() == user);

@@ -9,7 +9,6 @@ import nbcamp.jpascheduler.dto.ScheduleUpdateDto;
 import nbcamp.jpascheduler.exception.ApiException;
 import nbcamp.jpascheduler.exception.CommonErrorCode;
 import nbcamp.jpascheduler.repository.ScheduleRepository;
-import org.apache.tomcat.util.json.JSONParser;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.data.domain.PageRequest;
@@ -21,7 +20,6 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -42,7 +40,7 @@ public class ScheduleService {
 
     @Transactional
     public Schedule save(ScheduleCreateDto dto) {
-        Schedule schedule = new Schedule();
+        Schedule schedule = new Schedule(dto.getTitle(), dto.getContent());
         List<Long> userIds = dto.getUserIds();
         for (Long userId : userIds) {
             User user = userService.findById(userId);
@@ -51,8 +49,6 @@ public class ScheduleService {
             }
             schedule.getManagementList().add(scheduleManagementService.save(schedule, user));
         }
-        schedule.setTitle(dto.getTitle());
-        schedule.setContent(dto.getContent());
 
         URI uri = UriComponentsBuilder
                 .fromUriString("https://f-api.github.io")
@@ -96,8 +92,7 @@ public class ScheduleService {
         if (checkId.isEmpty()) throw new ApiException(CommonErrorCode.INVALID_PARAMETER);
 
         Schedule schedule = checkId.get();
-        schedule.setTitle(dto.getTitle());
-        schedule.setContent(dto.getContent());
+        schedule.update(dto.getTitle(), dto.getContent());
         List<Long> userIds = dto.getUserIds();
         List<ScheduleManagement> currentManagements = schedule.getManagementList();
         List<Long> currentUserIds = schedule.findUserIds();
