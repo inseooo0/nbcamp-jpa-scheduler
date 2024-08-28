@@ -2,10 +2,12 @@ package nbcamp.jpascheduler.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Getter @Setter
+@Getter
+@NoArgsConstructor
 public class ScheduleManagement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,4 +18,9 @@ public class ScheduleManagement {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    public ScheduleManagement(Schedule schedule, User user) {
+        this.schedule = schedule;
+        this.user = user;
+    }
 }

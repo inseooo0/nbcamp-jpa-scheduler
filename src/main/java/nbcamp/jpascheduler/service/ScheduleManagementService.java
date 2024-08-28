@@ -16,9 +16,7 @@ public class ScheduleManagementService {
 
     @Transactional
     public ScheduleManagement save(Schedule schedule, User user) {
-        ScheduleManagement scheduleManagement = new ScheduleManagement();
-        scheduleManagement.setSchedule(schedule);
-        scheduleManagement.setUser(user);
+        ScheduleManagement scheduleManagement = new ScheduleManagement(schedule, user);
         return repository.save(scheduleManagement);
     }
 
