@@ -1,9 +1,6 @@
 package nbcamp.jpascheduler.service;
 
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
-import nbcamp.jpascheduler.JpaSchedulerApplication;
-import nbcamp.jpascheduler.config.AppConfig;
 import nbcamp.jpascheduler.domain.Comment;
 import nbcamp.jpascheduler.domain.Schedule;
 import nbcamp.jpascheduler.domain.User;
