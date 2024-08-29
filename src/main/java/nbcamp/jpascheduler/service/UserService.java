@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 import static nbcamp.jpascheduler.domain.UserRole.ADMIN_TOKEN;
 
@@ -28,11 +27,11 @@ public class UserService {
 
     @Transactional
     public User save(UserCreateDto dto) {
-        Optional<User> checkEmail = repository.findByEmail(dto.getEmail());
-        if (checkEmail.isPresent()) throw new ApiException(CommonErrorCode.INVALID_PARAMETER);
+        repository.findByEmail(dto.getEmail())
+                .ifPresent(u -> {throw new ApiException(CommonErrorCode.INVALID_PARAMETER);});
 
-        Optional<User> checkName = repository.findByName(dto.getName());
-        if (checkName.isPresent()) throw new ApiException(CommonErrorCode.INVALID_PARAMETER);
+        repository.findByName(dto.getName())
+                .ifPresent(u -> {throw new ApiException(CommonErrorCode.INVALID_PARAMETER);});
 
         User user = new User(dto.getName(), dto.getEmail(), passwordEncoder.encode(dto.getPassword()));
         if (dto.getAdminToken() != null && dto.getAdminToken().equals(ADMIN_TOKEN)) {
@@ -50,16 +49,13 @@ public class UserService {
     }
 
     public User findById(Long id) {
-        Optional<User> checkId = repository.findById(id);
-        if (checkId.isEmpty()) throw new ApiException(CommonErrorCode.INVALID_PARAMETER);
-        return checkId.get();
+        return repository.findById(id)
+                .orElseThrow(() -> new ApiException(CommonErrorCode.INVALID_PARAMETER));
     }
 
     public User findByEmail(String email) {
-        Optional<User> checkEmail = repository.findByEmail(email);
-        if (checkEmail.isEmpty()) throw new ApiException(CommonErrorCode.INVALID_PARAMETER);
-
-        return checkEmail.get();
+        return repository.findByEmail(email)
+                .orElseThrow(() -> new ApiException(CommonErrorCode.INVALID_PARAMETER));
     }
 
     public List<User> findAll() {
@@ -68,10 +64,7 @@ public class UserService {
 
     @Transactional
     public User updateUser(Long id, UserUpdateDto updateDto) {
-        Optional<User> checkId = repository.findById(id);
-        if (checkId.isEmpty()) throw new ApiException(CommonErrorCode.INVALID_PARAMETER);
-
-        User user = checkId.get();
+        User user = findById(id);
         user.update(updateDto.getName(), updateDto.getEmail());
         return user;
     }

@@ -24,9 +24,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-import static java.time.LocalTime.now;
 
 @Service
 @RequiredArgsConstructor
@@ -75,10 +73,8 @@ public class ScheduleService {
     }
 
     public Schedule findById(Long id) {
-        Optional<Schedule> checkId = repository.findById(id);
-        if (checkId.isEmpty()) throw new ApiException(CommonErrorCode.INVALID_PARAMETER);
-
-        return checkId.get();
+        return repository.findById(id)
+                .orElseThrow(() -> new ApiException(CommonErrorCode.INVALID_PARAMETER));
     }
 
     public List<Schedule> findAll(int pageNum, int pageSize) {
@@ -88,10 +84,7 @@ public class ScheduleService {
 
     @Transactional
     public Schedule update(Long id, ScheduleUpdateDto dto) {
-        Optional<Schedule> checkId = repository.findById(id);
-        if (checkId.isEmpty()) throw new ApiException(CommonErrorCode.INVALID_PARAMETER);
-
-        Schedule schedule = checkId.get();
+        Schedule schedule = findById(id);
         schedule.update(dto.getTitle(), dto.getContent());
         List<Long> userIds = dto.getUserIds();
         List<ScheduleManagement> currentManagements = schedule.getManagementList();
@@ -108,9 +101,6 @@ public class ScheduleService {
         for (Long userId : userIds) {
             if (!currentUserIds.contains(userId)) {
                 User user = userService.findById(userId);
-                if (user == null) {
-                    throw new ApiException(CommonErrorCode.INVALID_PARAMETER);
-                }
                 ScheduleManagement newManagement = scheduleManagementService.save(schedule, user);
                 currentManagements.add(newManagement);
             }

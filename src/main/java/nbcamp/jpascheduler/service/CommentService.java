@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -28,20 +27,13 @@ public class CommentService {
     public Comment save(CommentCreateDto dto) {
         Schedule schedule = scheduleService.findById(dto.getScheduleId());
         User user = userService.findById(dto.getUserId());
-
-        if (schedule == null) throw new ApiException(CommonErrorCode.INVALID_PARAMETER);
-        if (user == null) throw new ApiException(CommonErrorCode.INVALID_PARAMETER);
-
         Comment comment = new Comment(schedule, user, dto.getContent());
         return repository.save(comment);
     }
 
     public Comment findById(Long id) {
-        Optional<Comment> comment = repository.findById(id);
-        if (comment.isEmpty()) {
-            throw new ApiException(CommonErrorCode.INVALID_PARAMETER);
-        }
-        return comment.get();
+        return repository.findById(id)
+                .orElseThrow(() -> new ApiException(CommonErrorCode.INVALID_PARAMETER));
     }
 
     public List<Comment> findAll() {
@@ -50,14 +42,10 @@ public class CommentService {
 
     @Transactional
     public Comment update(Long id, CommentUpdateDto dto) {
-        Optional<Comment> checkId = repository.findById(id);
-        if (checkId.isEmpty()) throw new ApiException(CommonErrorCode.INVALID_PARAMETER);
 
-        Comment comment = checkId.get();
+        Comment comment = findById(id);
         Schedule schedule = scheduleService.findById(dto.getScheduleId());
-
         User user = userService.findById(dto.getUserId());
-        if (user == null) throw new ApiException(CommonErrorCode.INVALID_PARAMETER);
 
         comment.update(schedule, user, dto.getContent());
         return comment;
