@@ -1,9 +1,8 @@
 package nbcamp.jpascheduler.dto;
 
 import lombok.Getter;
-import lombok.Setter;
 
-@Getter @Setter
+@Getter
 public class CommentCreateDto {
     private Long scheduleId;
     private Long userId;

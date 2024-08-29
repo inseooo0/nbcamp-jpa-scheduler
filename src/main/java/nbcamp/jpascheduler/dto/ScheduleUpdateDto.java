@@ -1,11 +1,10 @@
 package nbcamp.jpascheduler.dto;
 
 import lombok.Getter;
-import lombok.Setter;
 
 import java.util.List;
 
-@Getter @Setter
+@Getter
 public class ScheduleUpdateDto {
     private List<Long> userIds;
     private String title;

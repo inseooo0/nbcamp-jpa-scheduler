@@ -9,7 +9,6 @@ import nbcamp.jpascheduler.dto.UserUpdateDto;
 import nbcamp.jpascheduler.annotation.AuthorizationMethod;
 import nbcamp.jpascheduler.jwt.JwtUtil;
 import nbcamp.jpascheduler.service.UserService;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +23,6 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
-    private final ModelMapper modelMapper;
     private final JwtUtil jwtUtil;
 
     @AuthorizationMethod
@@ -34,7 +32,7 @@ public class UserController {
         String token = jwtUtil.createToken(saved);
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", token);
-        return new ResponseEntity<>(modelMapper.map(saved, UserResponseDto.class),
+        return new ResponseEntity<>(UserResponseDto.of(saved),
                 headers, HttpStatus.OK);
     }
 
@@ -46,14 +44,14 @@ public class UserController {
         String token = jwtUtil.createToken(user);
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", token);
-        return new ResponseEntity<>(modelMapper.map(user, UserResponseDto.class),
+        return new ResponseEntity<>(UserResponseDto.of(user),
                 headers, HttpStatus.OK);
     }
 
     @GetMapping("/{userId}")
     public UserResponseDto getUser(@PathVariable Long userId) {
         User user = userService.findById(userId);
-        return modelMapper.map(user, UserResponseDto.class);
+        return UserResponseDto.of(user);
     }
 
     @GetMapping
@@ -62,7 +60,7 @@ public class UserController {
         List<UserResponseDto> dtoList = new ArrayList<>();
 
         for (User user : userList) {
-            dtoList.add(modelMapper.map(user, UserResponseDto.class));
+            dtoList.add(UserResponseDto.of(user));
         }
         return dtoList;
     }
@@ -71,7 +69,7 @@ public class UserController {
     public UserResponseDto updateUser(@PathVariable Long userId,
                                       @RequestBody UserUpdateDto requestDto) {
         User user = userService.updateUser(userId, requestDto);
-        return modelMapper.map(user, UserResponseDto.class);
+        return UserResponseDto.of(user);
     }
 
     @DeleteMapping("/{userId}")
